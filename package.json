@@ -1,0 +1,33 @@
+{
+   "name": "ragemp-base-template",
+   "version": "1.0.0",
+   "description": "a simple rage.mp Server template in Javascript/Typescript",
+   "main": "index.js",
+   "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "start": "ts-node src/index.ts"
+   },
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/Concil/ragemp-base-template.git"
+   },
+   "author": "Florian 'Concil' Schmidt",
+   "license": "Apache-2.0",
+   "bugs": {
+      "url": "https://github.com/Concil/ragemp-base-template/issues"
+   },
+   "homepage": "https://github.com/Concil/ragemp-base-template#readme",
+   "devDependencies": {
+      "@types/node": "^8.0.29",
+      "@types/ragemp-s": "github:CocaColaBear/types-ragemp-s#v1.0",
+      "ts-node": "3.3.0",
+      "typescript": "3.3.3333"
+   },
+   "dependencies": {
+      "reflect-metadata": "^0.1.10",
+      "sqlite3": "^4.1.1",
+      "typeorm": "0.2.24",
+      "typescript": "^3.8.3",
+      "mysql": "^2.14.1"
+   }
+}
