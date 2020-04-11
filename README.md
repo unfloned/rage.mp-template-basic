@@ -1,14 +1,26 @@
-# RageMP Base Template with Typescript and TypeORM
+# RageMP Base Template with [Typescript](https://www.typescriptlang.org/) and [TypeORM](https://typeorm.io/)
 
-**! this work is in progress !**
+> ! Still in Development - the code can change anytime. !
+
+not all systems are ready to use so this template can change anytime.
 
 > Description
 
-**RageMP Base Template** is a basic template for your RageMP Server.
+**RageMP Base Template** is a basic template for your RageMP Server written in Typescript.
 
-It's an easy way to start your server development. This Template have a few Features like `Player System, Vehicle System, Event Handler.` maybe more in the future.
+It's an easy way to start your server development. This Template have a few Features:
 
-its written in Typescript for NodeJS.
+- Event Handler
+- Player System
+- Vehicle System 
+- Admin System (kick, ban, mute)
+- Login Register System (/login /register)
+
+maybe some feature must be developed and will be updated soon.
+
+> Why?
+
+i want to show you the typescript language. This language is for myself the best language i've ever seen and i want to show you how easy it is to build awesome stuffs in the world. It should develope more people with it :-)
 
 > Table of Contents
 
@@ -46,7 +58,7 @@ its written in Typescript for NodeJS.
     - you can change your package name in `"outDir": "./packages/baseTemplate/",`
 - change database config in `ormconfig.json` to your own
 
-> Developing
+> Start to Developing
 - use command prompt in your server-files folder `tsc --watch` for watching your `.ts` files and compile these automaticly to js files
 - if you want use `npm install pm2` to monitoring your server and restart the server automaticly on file changing
 - read the comments in source-code to understand how the script is working
@@ -58,6 +70,7 @@ its written in Typescript for NodeJS.
 
 # FAQ
 
+currently nothing exists ...
 
 ---
 
@@ -67,5 +80,5 @@ if you need help, you can contact me in following ways:
 
 - Skype: c0nc1l
 - Discord: Concil#6452 and in RageMP Discord Server
-- [RageMP Thread]()
+- [RageMP Thread]() // not published right now
 - Teamspeak³ Server (german): splasher.de
