@@ -1,5 +1,5 @@
 import { Core } from "../core";
-import { Player } from "../../entity/Player";
+import { Player } from "../../entity/Player.entity";
 import { isNullOrUndefined } from "util";
 
 /**
@@ -7,11 +7,14 @@ import { isNullOrUndefined } from "util";
  */
 export class PlayerController {
 
-    // Store player data from database in this Player array
-    public players: Player[];
+    public players: Player[] = new Array<Player>(); // Store player data from database in this Player array
+    public playerStartPosition: Vector3Mp[] = new Array<Vector3Mp>(); // player spawn positions in array, so we can use it like a random spawner
 
     constructor(protected core: Core) {
-        
+        //prepare start positions for the player
+        this.playerStartPosition.push(new mp.Vector3(150.126, -754.591, 262.865)); // [FIB Roof]
+        this.playerStartPosition.push(new mp.Vector3(346.05462646484375, -741.6575927734375, 29.269922256469727)); // [in the near of FIB Roof]
+        this.playerStartPosition.push(new mp.Vector3(363.3694152832031, -580.3405151367188, 28.838319778442383)); // [in the near of FIB Roof]
     }
 
     /**
@@ -48,6 +51,8 @@ export class PlayerController {
             playerMp.outputChatBox(`You will be automaticly kicked from this server.`);
             playerMp.kick("Database error"); // Todo KickHandler
         }
+
+        console.log(`New Player ${playerMp.name}[${playerMp.id}] now connected`);
     }
 
     /**
@@ -71,13 +76,19 @@ export class PlayerController {
      */
     async onPlayerLogin(playerMp: PlayerMp, inputUsername: string, inputPassword: string) {
         //Todo
+        if(!isNullOrUndefined(this.players[playerMp.id])) {
+            // player already logged in
+            return false;
+        }
+
+
         const player = await this.core.Entity.findOne(Player, { username: inputUsername});
         if(isNullOrUndefined(player)) {
             //player is not found in database
             playerMp.outputChatBox("username not found");
             return false;
         }
-        
+
         if(player.password != inputPassword) {
             //the password does not match
             playerMp.outputChatBox("password does not match.");
@@ -89,7 +100,7 @@ export class PlayerController {
         // and call the spawn for him
         this.players[playerMp.id] = player;
         this.playerSpawn(playerMp);
-
+        playerMp.outputChatBox(`Welcome back, ${player.username}`);
     }
 
     async onPlayerRegister(playerMp: PlayerMp, inputUsername: string, inputPassword: string) {
@@ -97,6 +108,8 @@ export class PlayerController {
             // player already logged in
             return false;
         }
+
+
         const prePlayer = await this.core.Entity.findOne(Player, { username: inputUsername});
         if(!isNullOrUndefined(prePlayer)) {
             //player is already registered
@@ -104,16 +117,25 @@ export class PlayerController {
             return false;
         }
 
-        //Create the new Player Class
+        //Create the new Player Class and set the variables
         let player = new Player();
         player.username = inputUsername;
         player.password = inputPassword;
         player.money = 10000;
         player.admin = 0;
 
-        // Store the new player in player array
+        // Store the new player in this.players array
         this.players[playerMp.id] = player;
 
+        // and save to database directly
+        // in my case i use mongoDB so i must use mongoManger
+        await this.core.Connection.mongoManager.save(player);
+        // with MySQL you should use:
+        //await this.core.Entity.save(player);
+
+
+        playerMp.outputChatBox(`Welcome, ${player.username}`);
+        console.log(`new player [${player.username}] from ${playerMp.name} was registered`);
     }
 
     /**
@@ -121,42 +143,41 @@ export class PlayerController {
      * @param playerMp 
      */
     playerSpawn(playerMp: PlayerMp) {
-        playerMp.position = new mp.Vector3(126.135, -1278.583, 29.270); // Set player Position [Strip Club DJ Booth]
+        // Generate a random number from 0 to maximum length of this.playerStartPosition array
+        const randomNumber: number = Math.floor(Math.random() * this.playerStartPosition.length);
+        playerMp.position = this.playerStartPosition[randomNumber]; // set the player position of the number we have generated
+        //console.log(`[DEBUG] randomNumber:${randomNumber} -> ${this.playerStartPosition[randomNumber]}`);
     }
 
-    onPlayerCommand(playerMp: PlayerMp, command: string) {
-        if(command !== undefined) {
-            const args = command.split(/[ ]+/);
-            if(args[0] !== undefined) {
-                switch(args[0]) {
-                    case "help":
-                        playerMp.outputChatBox("/login [username] [password]");
-                    break;
-                    case "login":
-                        var username: string = args[1];
-                        var password: string = args[2];
+    
+    onPlayerDeath(playerMp: PlayerMp, reason: number, killer: PlayerMp) {
+        //standard way
+        // if(killer !== undefined) {
+        //     playerMp.outputChatBox(`you was killed from ${killer.name} - wait 5 seconds to spawn`);
+        // } else {
+        //     playerMp.outputChatBox(`you are death - wait 5 seconds to spawn`);
+        // }
 
-                        if(username == undefined && password == undefined) return this.sendCommandError(playerMp, `You must fill your arguments`, `login [username] [password]`);
-                    break;
-                    case "register":
-                        var username: string = args[1];
-                        var password: string = args[2];
+        //inline way
+        playerMp.outputChatBox((killer !== undefined ? `you was killed by ${killer.name}` : `you are death`) + ` - Respawn in 5 Seconds`);
 
-                        if(username == undefined && password == undefined) {
-                            return this.sendCommandError(playerMp, `You must fill your arguments`, `register [username] [password]`);
-                        }
-                    break;
-                    default: 
-                        playerMp.outputChatBox(`your command ${args[0]} not exists. you get help with command: '/help'`);
-                    break;
-
-                } 
-            }
-        }
+        setTimeout( () => {
+            playerMp.health = 100;
+            this.playerSpawn(playerMp);
+        }, 5000);
     }
 
-    sendCommandError(playerMp: PlayerMp, msg: string, correctWay?: string) {
-        playerMp.outputChatBox(`Error: ${msg}`);
-        if(correctWay !== undefined) playerMp.outputChatBox(`Usage: /${correctWay}`);
+    /*
+        this function will be improved soon.
+    */
+    onPlayerExitVehicle(playerMp: PlayerMp, vehicleMp: VehicleMp) {
+        vehicleMp.engine = false;
+    }
+    
+    /*
+        this function will be improved soon.
+    */
+    onPlayerEnterVehicle(playerMp: PlayerMp, vehicleMp: VehicleMp) {
+        vehicleMp.engine = true;
     }
 }

@@ -8,17 +8,7 @@
    "synchronize": true,
    "logging": false,
    "entities": [
-      "server-source/entity/**/*.ts"
+      "**/*.entity.js"
    ],
-   "migrations": [
-      "server-source/migration/**/*.ts"
-   ],
-   "subscribers": [
-      "server-source/subscriber/**/*.ts"
-   ],
-   "cli": {
-      "entitiesDir": "server-source/entity",
-      "migrationsDir": "server-source/migration",
-      "subscribersDir": "server-source/subscriber"
-   }
+   "useUnifiedTopology": true
 }

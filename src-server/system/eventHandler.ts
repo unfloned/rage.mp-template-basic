@@ -12,6 +12,10 @@ export class EventHandler {
 
         //player stuffs
         mp.events.add("playerReady", (playerMp: PlayerMp) => { this.core.playerController.onPlayerConnected(playerMp); });
-        mp.events.add("playerCommand", (playerMp: PlayerMp, command: string) => { this.core.playerController.onPlayerCommand(playerMp, command); });
+        mp.events.add("playerQuit", (playerMp: PlayerMp) => { this.core.playerController.onPlayerDisconnect(playerMp); });
+        mp.events.add("playerDeath", (playerMp: PlayerMp, reason: number, killer: PlayerMp) => { this.core.playerController.onPlayerDeath(playerMp, reason, killer); });
+        mp.events.add("playerCommand", (playerMp: PlayerMp, command: string) => { this.core.commandController.onCommand(playerMp, command); });
+        mp.events.add("playerExitVehicle", (playerMp: PlayerMp, vehicleMp: VehicleMp) => { this.core.playerController.onPlayerExitVehicle(playerMp, vehicleMp); });
+        mp.events.add("playerEnterVehicle", (playerMp: PlayerMp, vehicleMp: VehicleMp) => { this.core.playerController.onPlayerEnterVehicle(playerMp, vehicleMp); });
     }
 }

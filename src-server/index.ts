@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import {createConnection, Connection} from "typeorm";
+import { createConnection } from "typeorm";
 import { Core } from "./system/core";
 
 /**

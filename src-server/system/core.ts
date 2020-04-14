@@ -1,7 +1,9 @@
 import { Connection, EntityManager } from "typeorm";
-import { PlayerController } from "./player/PlayerController";
+import { PlayerController } from "./player/playerController";
 import { EventHandler } from "./eventHandler";
 import { Utils } from "./utils";
+import { CommandController } from "./player/commandController";
+import { VehicleController } from "./vehicle/vehicleController";
 
 /**
  * Core class is just a simple class who manage all other classes.
@@ -19,12 +21,6 @@ import { Utils } from "./utils";
  * in the core class you can simple store main Variables to access from other classes
  */
 
-
-// Todo:
-// Vehicle System
-// Login Register System (admin, money)
-// Admin System (kick, ban, timeban)
-
 export class Core {
 
     //Main
@@ -37,9 +33,10 @@ export class Core {
 
     //Player
     public playerController: PlayerController;
+    public commandController: CommandController;
 
     //Vehicle
-    //public vehicleController: VehicleController;
+    public vehicleController: VehicleController;
 
     //Stuffs
 
@@ -57,14 +54,40 @@ export class Core {
 
         // Initialize Player
         this.playerController = new PlayerController(this);
+        this.commandController = new CommandController(this);
 
         // Initialize Vehicle
-        //this.vehicleController = new VehicleController(this);
+        this.vehicleController = new VehicleController(this);
         
         // Initialize Stuffs
         // ..
         
         
         console.log(`[BASE-TPL] All systems loaded and ready. Database: ${databaseConnection.isConnected}`);
+    }
+
+    /**
+     * we need this because i use mongodb as database driver.
+     * typeORM need another save method from the entity for mongoDB
+     * mysql should use the EntityManager to save the entity in database
+     * if you use another driver as mongoDb or MySQL please goto https://typeorm.io/
+     * you can use this function or directly in the script.
+     * i prefer directly in the script wherever i need it. (look at onPlayerRegister in PlayerController)
+     * @param entity 
+     */
+    async entitySave(entity: any) {
+        if(this.Connection.options.type == "mongodb") {
+            try {
+                await this.Connection.mongoManager.save(entity);
+            } catch(error) {
+                console.log(`entitySave throws errors: \n${error}`);
+            }
+        } else {
+            try {
+                await this.Entity.save(entity);
+            } catch(error) {
+                console.log(`entitySave throws errors: \n${error}`);
+            }
+        }
     }
 }
