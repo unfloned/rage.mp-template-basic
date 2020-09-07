@@ -5,6 +5,6 @@ build/
 tmp/
 temp/
 packages/
-src-client/node_modules/
-src-server/node_modules/
-server/
+client/node_modules/
+server/node_modules/
+bin/
