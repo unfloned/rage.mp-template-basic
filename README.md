@@ -54,18 +54,31 @@ i want to show you the typescript language. This language is for myself the best
 
 > Config
 
-- change your `tsconfig.json`
-    - you can change your package name in `"outDir": "./packages/baseTemplate/",`
-- change database config in `ormconfig.json` to your own
+the important config is your database config that is located in `server/ormconfig.json`.
+
+if you want to change your packagename you must edit `src-server/tsconfig.json` and change the last foldername in `outDir` variable
 
 > Start to Developing
-- use command prompt in your server-files folder `tsc --watch` for watching your `.ts` files and compile these automaticly to js files
-- if you want use `npm install pm2` to monitoring your server and restart the server automaticly on file changing
+
+in our case we have `src-client` and `src-server` that we must compile with typescript (`tsc`) because we want for server side scripting other packages instead of client side scripting.
+that current problem is, that `server/` needs the same `node_modules` like in `src-server`. So currently you must use the same `packages.json` in `src-server/` and `server/`. **install packages in both folder!**
+
+- use command prompt in `src-client/` and run `tsc --watch` or only one times `tsc`. now typescript compiles only the client-side scripting
+- use command prompt in `src-server/` and run `tsc --watch` or only one times `tsc`. now typescript compiles only the server-side scripting
 - read the comments in source-code to understand how the script is working
 - make more classes, improvements, systems and make your own unique RageMP Server.
 
 
+if you want to watch your server, that he restart if a file was changed, use package `pm2` or other package you want.
+to install use `npm install pm2` in `server/` folder.
 
+---
+# Todo
+
+i need something todo before this can be used:
+
+- make a better way to duplicate or use packages.json from `src-server/` and `server/`
+- a client system
 ---
 
 # FAQ

@@ -9,10 +9,22 @@ import { Core } from "./system/core";
  * check core.ts class.
  */
 
+const FgReset="\x1b[0m";
+const FgRed="\x1b[31m";
+const FgGreen="\x1b[32m";
+const FgYellow="\x1b[33m";
+const FgBlue="\x1b[34m";
+
+console.log(`${FgGreen}[BASE TEMPLATE]${FgReset} ${FgYellow}Connecting to Database${FgReset}`);
+mp.events.delayInitialization = true;
 
 createConnection().then(async connection => {
-    const core : Core = new Core(connection);
+    console.log(`${FgGreen}[BASE TEMPLATE]${FgReset} ${FgGreen}Successfully Connected to Database${FgReset}`);
+    mp.events.delayInitialization = false;
+
+    new Core(connection);
+
 }).catch( (error) => {
-    console.log("TypeORM / Database Connection has errors:");
+    console.log(`${FgGreen}[BASE TEMPLATE]${FgReset} TypeORM / Database Connection has errors:`);
     console.log(error);
 });
