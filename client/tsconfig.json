@@ -8,7 +8,7 @@
       "target": "es6",
       "module": "CommonJS",
       "moduleResolution": "node",
-      "outDir": "../server/client_packages/",
+      "outDir": "../bin/client_packages/",
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
       "sourceMap": true

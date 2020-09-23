@@ -7,4 +7,4 @@ temp/
 packages/
 client/node_modules/
 server/node_modules/
-bin/
+server-files/

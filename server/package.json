@@ -21,7 +21,7 @@
       "@types/node": "^8.0.29",
       "@types/ragemp-s": "github:CocaColaBear/types-ragemp-s#v1.0",
       "ts-node": "3.3.0",
-      "typescript": "3.3.3333"
+      "typescript": "3.8.3"
    },
    "dependencies": {
       "mongo": "^0.1.0",
